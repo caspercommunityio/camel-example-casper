@@ -13,13 +13,14 @@ import org.apache.camel.model.dataformat.JacksonXMLDataFormat;
 import org.apache.camel.model.dataformat.JaxbDataFormat;
 
 import com.syntifi.casper.sdk.model.auction.AuctionState;
+import com.syntifi.casper.sdk.model.balance.BalanceData;
 import com.syntifi.casper.sdk.model.block.JsonBlock;
 import com.syntifi.casper.sdk.model.era.JsonEraValidators;
 import com.syntifi.casper.sdk.model.stateroothash.StateRootHashData;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 
 
-public class Test {
+public class DemoApp {
 
 	private static void loadroute1(CamelContext cntxt, ProducerTemplate temp) throws Exception {
 		cntxt.addRoutes(new RouteBuilder() {
@@ -78,13 +79,7 @@ public class Test {
 	private static void loadroute3(CamelContext cntxt, ProducerTemplate temp) throws Exception {
 		cntxt.addRoutes(new RouteBuilder() {
 			public void configure() throws Exception {
-				
-			
-				
-				// JSON Data Format
-				//JacksonXMLDataFormat jsonDataFormat = new JacksonXMLDataFormat(JsonEraValidators.class);
-
-				// JSON Data Format
+					// JSON Data Format
 				JacksonDataFormat jsonDataFormat = new JacksonDataFormat(JsonEraValidators.class);
 
 				
@@ -116,6 +111,46 @@ public class Test {
 	
 	
 	
+	private static void loadroute4(CamelContext cntxt, ProducerTemplate temp) throws Exception {
+		cntxt.addRoutes(new RouteBuilder() {
+			public void configure() throws Exception {
+				from("direct:" + CasperConstants.STATE_ROOT_HASH+"_01").routeId("STATE_ROOT_HASH")
+						.to("casper:http://65.21.227.180:7777/?operation=" + CasperConstants.STATE_ROOT_HASH)
+						.process(new Processor() {
+
+							@Override
+							public void process(Exchange exchange) throws Exception {
+								StateRootHashData state = (StateRootHashData) exchange.getIn().getBody();
+								System.err.println("* Current STATE_ROOT_HASH is : " + state.getStateRootHash());
+								System.err.println("* Using this  STATE_ROOT_HASH  " + state.getStateRootHash() + " to Query "+CasperConstants.ACCOUNT_BALANCE + " for this Account : 017d9aa0b86413d7ff9a9169182c53f0bacaa80d34c211adab007ed4876af17077");
+								
+								exchange.getOut().setHeader(CasperConstants.STATE_ROOT_HASH, state.getStateRootHash());
+								exchange.getOut().setHeader(CasperConstants.PURSE_UREF, "uref-e18e33382032c835e9ccf367baa20e043229c6d45d135b60aa7301ff1eeb317b-007");
+							}
+						})
+						
+						.to("casper:http://65.21.227.180:7777/?operation=" + CasperConstants.ACCOUNT_BALANCE)
+						.process(new Processor() {
+
+							@Override
+							public void process(Exchange exchange) throws Exception {
+								BalanceData balance = (BalanceData) exchange.getIn().getBody();
+								System.err.println("* balance of account 017d9aa0b86413d7ff9a9169182c53f0bacaa80d34c211adab007ed4876af17077 : " + balance.getValue());
+							}})
+						
+						;
+			}
+		});
+
+		cntxt.start();
+		temp.sendBody("direct:" + CasperConstants.STATE_ROOT_HASH+"_01", "This is a test message");
+		cntxt.stop();
+
+	}
+	
+	
+	
+	
 	public static void main(String[] args) throws Exception {
 
 		CamelContext context = new DefaultCamelContext();
@@ -137,6 +172,17 @@ public class Test {
 	
 		
 		loadroute3(context, template);
+		
+		
+
+		System.err.println(
+				"------------------------------- this route performs a call to getStaterouteHash and uses the StaterouteHash to query accout balance for-------------------------------------------");
+		System.err.println(
+				"------------------------------- account : 017d9aa0b86413d7ff9a9169182c53f0bacaa80d34c211adab007ed4876af17077 and print the balance to console ------------------------------------------------------------------------------------");
+	
+		
+		loadroute4(context, template);
+		
 		
 	}
 
