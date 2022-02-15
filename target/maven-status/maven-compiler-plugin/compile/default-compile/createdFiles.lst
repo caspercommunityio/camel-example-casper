@@ -1,0 +1,3 @@
+org/apache/camel/example/casper/CasperProcessor.class
+org/apache/camel/example/casper/MainApp.class
+org/apache/camel/example/casper/CasperRouteBuilder.class
