@@ -14,8 +14,7 @@ public class MainApp {
 	 */
    public static void main(String...args) throws Exception
    {
-	  System.out.println("Salut Mika...."); 
-	   
+		   
       Main main = new Main();
 
       main.configure().addRoutesBuilder(new CasperRouteBuilder());

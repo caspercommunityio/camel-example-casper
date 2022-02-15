@@ -27,14 +27,21 @@ public class CasperRouteBuilder extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         
+    	
+    	from("file:src/main/resources/datas/?fileName=get_block.txt&charset=utf-8&noop=true").convertBodyTo(String.class)
+    		      .log("${body}")
+    		      .setHeader("BLOCK_HASH",body())
+    		      .to("casper:http://65.21.227.180:7777/?operation="+CasperConstants.BLOCK)
+    		    		  .log("${body}")
+    		      ;
     
     	
     	//add one route per RPC call
     	
     	//GET_ACCOUNT_INFO
-    	 from("timer://simpleTimer?period=5000")
-	      .to("casper:http://65.21.227.180:7777/?operation="+CasperConstants.ACCOUNT_INFO)
-	      .log("call "+CasperConstants.ACCOUNT_INFO +" with params : blockHeight=530214 and publicKey=017d9aa0b86413d7ff9a9169182c53f0bacaa80d34c211adab007ed4876af17077   gives result = ${body}");
+    	// from("timer://simpleTimer?period=5000")
+	     // .to("casper:http://65.21.227.180:7777/?operation="+CasperConstants.ACCOUNT_INFO)
+	     // .log("call "+CasperConstants.ACCOUNT_INFO +" with params : blockHeight=530214 and publicKey=017d9aa0b86413d7ff9a9169182c53f0bacaa80d34c211adab007ed4876af17077   gives result = ${body}");
 	   
 	   
 }
