@@ -16,6 +16,8 @@
  */
 package org.apache.camel.example.casper;
 
+import org.apache.camel.ProducerTemplate;
+import org.apache.camel.Route;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.casper.CasperConstants;
 
@@ -26,15 +28,31 @@ public class CasperRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        
+       
+    	
+    	
+    	
+    	
     	
     	from("file:src/main/resources/datas/?fileName=get_block.txt&charset=utf-8&noop=true").convertBodyTo(String.class)
-    		      .log("${body}")
+    		      .routeId("one")
     		      .setHeader("BLOCK_HASH",body())
     		      .to("casper:http://65.21.227.180:7777/?operation="+CasperConstants.BLOCK)
     		    		  .log("${body}")
     		      ;
     
+    	
+    	
+    	from("direct:start").routeId("two")
+	      .to("casper:http://65.21.227.180:7777/?operation="+CasperConstants.STATE_ROOT_HASH)
+	    		  .log("${body}")
+	      ;
+
+    	
+    	ProducerTemplate tem  = getContext().createProducerTemplate();
+    	
+    	tem.sendBody("direct:start", "This is a test message");
+    	 
     	
     	//add one route per RPC call
     	
