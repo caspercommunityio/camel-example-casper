@@ -1,23 +1,19 @@
 package org.apache.camel.example.casper;
 
-import javax.xml.bind.JAXBContext;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.casper.CasperConstants;
+import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.model.dataformat.JacksonXMLDataFormat;
-import org.apache.camel.model.dataformat.JaxbDataFormat;
 
 import com.syntifi.casper.sdk.model.auction.AuctionState;
 import com.syntifi.casper.sdk.model.balance.BalanceData;
 import com.syntifi.casper.sdk.model.block.JsonBlock;
 import com.syntifi.casper.sdk.model.era.JsonEraValidators;
 import com.syntifi.casper.sdk.model.stateroothash.StateRootHashData;
-import org.apache.camel.component.jackson.JacksonDataFormat;
 
 
 public class DemoApp {
