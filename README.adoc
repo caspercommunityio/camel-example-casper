@@ -8,8 +8,8 @@ An example which shows how to use Casper Camel Component.
 
 === Implementation
 
-This example is implemented in Java code, it lauches a Camel route for every RPC method. 
-You can see the Java implementation of theses routes by opening the `src/main/java/org/apache/camel/example/casper/CasperRouteBuilder.java` 
+This example is implemented in Java code, it lauches a Camel route for some RPC method. 
+You can see the Java implementation of theses routes by opening the `src/main/java/org/apache/camel/example/casper/DemoApp.java` 
 
 
 
