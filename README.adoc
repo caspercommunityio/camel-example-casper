@@ -34,4 +34,3 @@ $ mvn compile exec:java
 
  and instructions will be printed on the console.
 
-You can enable verbose logging by adjusting the `src/main/resources/log4j.properties` file as documented in the file.
