@@ -1,4 +1,4 @@
-== Camel FTP example
+== Camel Casper example
 
 === Introduction
 
